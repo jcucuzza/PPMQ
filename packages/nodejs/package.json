@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/draxusio/ppMQ.git"
+    "url": "git+https://github.com/jcucuzza/PPMQ.git"
   },
   "keywords": [
     "ppmq",
@@ -21,7 +21,7 @@
   "author": "Jonathan Cucuzza",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/draxusio/ppMQ/issues"
+    "url": "https://github.com/jcucuzza/PPMQ/issues"
   },
-  "homepage": "https://github.com/draxusio/ppMQ#readme"
+  "homepage": "https://github.com/jcucuzza/PPMQ#readme"
 }
