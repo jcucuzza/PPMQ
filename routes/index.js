@@ -9,7 +9,7 @@ let port = process.env.PORT || 1337;
 
 var cred = {
   username: 'admin',
-  password: 'dxs123'
+  password: 'admin'
 }
 
 var loggedin = false;

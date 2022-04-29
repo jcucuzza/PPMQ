@@ -9,8 +9,8 @@ var indexRouter = require('./routes/index');
 var Client = require('./src/entities/Client');
 var clientList = require('./src/list/ClientList');
 
-clientList.add(new Client('LunarLogger', 'b09dfe5d-71ee-4d9a-bf12-4df371aafa5c'));
-clientList.add(new Client('Draxus', '718f30c2-fab9-4fc4-8df0-615e60dc3cf7'));
+clientList.add(new Client('LunarLoger', 'b09dfe5d-71ee-4d9a-bf12-4df371aafa5c'));
+clientList.add(new Client('Webserver', '718f30c2-fab9-4fc4-8df0-615e60dc3cf7'));
 clientList.add(new Client('Nodemailer', 'ffb6bdff-30fc-4249-b4ef-15413712427a'));
 clientList.add(new Client('LiveFeed', 'b2d8a3b1-695f-4f45-a2ac-c02c659f0104'));
 
