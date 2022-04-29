@@ -1,0 +1,225 @@
+<style>
+    #client-container{
+        padding-top:40px;
+        position:absolute;
+        width: 1254px;
+        background-color:white;
+    }
+    #add-client{
+        position:absolute;
+        top: 0;
+        right: 0;
+        padding-top: 20px;
+        padding-right: 50px;
+    }
+    .add-button {
+        box-shadow:inset 0px 1px 0px 0px #a4e271;
+        background:linear-gradient(to bottom, #89c403 5%, #77a809 100%);
+        background-color:#89c403;
+        border-radius:6px;
+        border:1px solid #74b807;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:12px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-shadow:0px 1px 0px #528009;
+    }
+    .add-button:hover {
+        background:linear-gradient(to bottom, #77a809 5%, #89c403 100%);
+        background-color:#77a809;
+        color:white;
+    }
+    .add-button:active {
+        position:relative;
+        top:1px;
+    }
+
+    #add-client-container{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 380px;
+        height: 150px;
+        z-index: 2;
+        border-radius: 6px;
+        box-shadow:inset 0px 1px 0px 0px #ffffff;
+	    background:linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+	    background-color:#f9f9f9;
+    	color:#666666;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-shadow:0px 1px 0px #ffffff;
+        display:none;
+    }
+
+    #client-name-form{
+        position:relative;
+        top: 50px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    #add-button{
+        position:relative;
+        top: 50px;
+        left: 300px;
+        transform: translate(-50%, -50%);
+    }
+
+    #view-client-key-container{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 380px;
+        height: 140px;
+        z-index: 2;
+        border-radius: 6px;
+        box-shadow:inset 0px 1px 0px 0px #ffffff;
+	    background:linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+	    background-color:#f9f9f9;
+    	color:#666666;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-shadow:0px 1px 0px #ffffff;
+        display:none;
+    }
+
+    #view-client-key{
+        position: relative;
+        top:20px;
+    }
+
+    #key-button{
+        position: relative;
+        top: 40px;
+        left: 120px;
+    }
+    
+    #copy-client-key-clipboard{
+        position:relative;
+        top: 19px;
+        left:320px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 0;
+    }
+</style>
+
+<div id='add-client-container'>
+    <div style="text-align:center;">Add Client </div>
+    <form id='client-name-form' action="/add-client" onsubmit="return validate()" method="POST"> 
+        <label for="clientName">Client Name</label>
+        <input type="text" id="clientName" name="clientName" autocomplete="off">
+        <input type="submit" id="add-button" class="add-button" value="ADD">
+    </form>
+</div>
+
+<div id='view-client-key-container'>
+    <div id='copy-client-key-clipboard' style="text-decoration:none;"><a href="javascript:copyDivToClipboard('view-client-key')"><i class="fa fa-clipboard" aria-hidden="true"></i><a></div>
+    <div id='view-client-key' style="text-align:center"></div>
+    <a href="javascript:closeKeyBox();" id='key-button' class="add-button">CLOSE</a>
+</div>
+
+
+<div id="client-container">
+    <div id="add-client">
+        <a href="javascript:addClient();" class="add-button">ADD <i class="fa fa-plus" aria-hidden="true"></i></a>
+    </div>
+
+    <table id="client-table" class="table table-hover" >
+    <thead class="thead-dark">
+        <tr>
+        <th>#</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% let cnt = 0; %>
+        <% for(let key in results) {%>
+        <tr>
+            <td> <%= cnt += 1 %> </td> 
+            <td><%= key %></td>
+            <td></td>
+            <td><a href="javascript:viewKey('<%= results[key].getKey() %>')"><i class="fa fa-key" aria-hidden="true"></i></a></td>
+            <td><a href="/delete-client?name=<%= key %>"><i class="fa fa-times" aria-hidden="true"></i></a></td>
+        </tr>
+        <% } %>
+    </tbody>
+    </table>
+</div>
+
+<script>
+    
+    var clientContainerLP =627;
+    var clientContainer = document.getElementById("client-container");
+
+    clientContainer.style.left = (window.innerWidth / 2) - clientContainerLP + "px";
+
+
+    
+    var clientTableBP = 160;
+    $(document).ready(function() {
+        scrolify($('#client-table'),  (window.innerHeight - clientTableBP)); 
+    });
+
+    function addClient(){
+        let clientForm = document.getElementById('add-client-container');
+        if(clientForm.style.display != 'block'){
+            clientForm.style.display = 'block';
+            clientForm.childNodes[3].childNodes[3].focus();
+        }else{
+            clientForm.style.display = 'none';
+        }
+    }
+
+    function viewKey(key){
+        let viewContainer = document.getElementById('view-client-key-container');
+        let viewKey = document.getElementById('view-client-key');
+        if(viewContainer.style.display != 'block'){
+            viewKey.innerHTML = key;
+            viewContainer.style.display = "block";
+        } else {
+            viewContainer.style.display = 'none'; 
+        }
+    }
+
+    function closeKeyBox(){
+        let viewContainer = document.getElementById('view-client-key-container');
+        if(viewContainer.style.display != 'block'){
+            viewContainer.style.display = "block";
+        } else {
+            viewContainer.style.display = 'none'; 
+        }
+    }
+
+    function copyDivToClipboard(elem) {
+        var range = document.createRange();
+        range.selectNode(document.getElementById(elem));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
+    }
+
+    window.addEventListener("resize", function(){
+        clientContainer.style.left = (window.innerWidth / 2) - clientContainerLP + "px";
+        document.getElementById('client-table-clone').style.height = window.innerHeight - clientTableBP + "px";
+    });
+
+</script>

@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    
+    <title>ppMQ</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    
+    <% include navbar %>
+<style>
+
+    #main-container {
+        transition: margin-left .5s;
+        padding-left:212px;
+        padding-top:40px;
+        position:inherit;
+        width: 100%;
+        background-color:white;
+        box-sizing: border-box;
+    }
+    #topic-header-container {
+        text-align: center;
+        padding-bottom:20px;
+
+    }
+    .column {
+        border: 1px solid lightgrey;
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+    .row{
+        padding-left:12px;
+        padding-right:12px;
+    }
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+    #topic-name {
+        font-size: 22px; 
+        font-weight: bold;
+
+    }
+    ::-webkit-scrollbar {
+        width: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 2rem;
+    }
+
+    .topic-table {
+        position: relative;
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+        
+    }
+    .topic-table  th, td {
+        padding: 16px;
+    }
+    .topic-table  tr:nth-child(even){
+        background-color: #f2f2f2;
+
+    } 
+    .topic-table tr:hover{
+        color:white;
+        background: lightgrey;
+    }
+    .topic-table th {
+        text-align: center;
+        color: black;
+        background-color:white;
+        position: sticky;
+        top: 0; /* Don't forget this, required for the stickiness */
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+    }
+    .message-container {
+        border: 1px solid lightgrey;
+        padding:5px;
+        width:100%;
+    }
+
+</style>
+
+<div id="main-container" >
+
+    <div id=topic-header-container>
+        <span id=topic-name>Topic:&nbsp; &nbsp; </span> <span style="font-size:22px;color:grey;"> <%= topic_summary.topic %></span>
+    </div>
+    <div class=row>
+        <div class=column>
+            <table id="pusher-table" class="topic-table">
+                <head>
+                    <tr>
+                        <th>Pushers 💨</th>
+                        <th>id</th>
+                    </tr>
+                </head>
+                <body>
+                </body>
+            </table>
+        </div>
+        <div class=column>
+            <table id="puller-table" class="topic-table">
+                <head>
+                    <tr>
+                        <th>Pullers 👂</th>
+                        <th>Status</th>
+                        <th>id</th>
+                    </tr>
+                </head>
+                <body>
+                </body>
+            </table>
+        </div>
+    </div>
+    <div class="message-container">
+        <table id="message-table" class="topic-table">
+            <head>
+                <tr>
+                    <th>#</td>
+                    <th>Messages 💬</th>
+                    <th>id</th>
+                    <th>Consumers</th>
+                </tr>
+            </head>
+            <body>
+            </body>
+        </table>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var pusherStore = {};
+    var pullerStore = {};
+    var msgStore = {};
+    window.onload = function(){
+        updateLiveData();
+    }
+
+    function updateLiveData(){
+        var request = new XMLHttpRequest();
+
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                data = JSON.parse(this.responseText);
+                if(!objectEmpty(data)){
+                    let summary = data.topic;
+                    updatePusherTable(summary.publishers);
+                    updatePullerTable(summary.subscribers);
+                    updateMessageTable(summary.messages);
+                }
+                setTimeout(updateLiveData(), 5000); //update every 5 second
+            } 
+        };
+        request.open('GET', window.location.origin + '/live-topic-summary?topic=<%= topic_summary.topic %>', true);
+        request.send();
+    }
+    function objectEmpty(obj){
+        return JSON.stringify(obj) === JSON.stringify({});
+    }
+    function updatePusherTable(publishers){
+        let tableName = "pusher-table";
+        let table = document.getElementById(tableName).getElementsByTagName("tbody")[0];
+        for(let i in publishers){
+            let pusher = publishers[i];
+            if(pusherStore[pusher.uid]  == undefined){
+                let newRow = table.insertRow(table.rows.length);
+                var content = addTd(pusher.name, 1);
+                    content += addTd(pusher.uid, 0);
+                newRow.innerHTML = content;
+                pusherStore[pusher.uid] = table.rows.length;
+            }
+        }
+        removeRowsThatNoLongerExistInData(tableName, pusherStore, publishers, 1, 'uid');
+    }
+
+    function updatePullerTable(subscribers){
+        let tableName = "puller-table";
+        let table = document.getElementById("puller-table").getElementsByTagName("tbody")[0];
+        for(let i in subscribers){
+            let puller = subscribers[i];
+            if(pullerStore[puller.uid] == undefined){
+                let newRow = table.insertRow(table.rows.length);
+                var content = addTd(puller.name, 1);
+                    content += addTd(puller.status, 0);
+                    content += addTd(puller.uid, 0);
+                newRow.innerHTML = content;
+                pullerStore[puller.uid] = table.rows.length;
+            } else {
+            
+            }
+        }
+        removeRowsThatNoLongerExistInData(tableName, pullerStore, subscribers, 2, 'uid');
+        updateCellInRow(tableName, subscribers, 2, 1, 'uid', 'status', false);
+    }
+
+    function updateMessageTable(messages){
+        let tableName = "message-table";
+        let table = document.getElementById(tableName).getElementsByTagName("tbody")[0];
+        for(let i in messages){
+            let message = messages[i];
+            if(msgStore[message.id] == undefined){
+                let newRow = table.insertRow(table.rows.length);
+                var content = addTd(table.rows.length - 1, 0);
+                    content += addTd(message.message, 1);
+                    content += addTd(message.id, 0);
+                    content += addTd(Object.keys(message.consume).length, 0);
+                newRow.innerHTML = content;
+                msgStore[message.id] = table.rows.length;
+            } else {
+                
+            }
+        }
+        //lets clear out stale messages here 
+        //go through all msgs that were sent + compare them to those within the rows of a table
+        //keep note that the ppmq client pulls a message and stages it internally to the clients queue
+        //awaiting for client to pull. This is why it may see like the display is delayed but
+        //it really is not.
+        removeRowsThatNoLongerExistInData(tableName, msgStore, messages, 2, null);
+        updateRowNumbers(tableName);
+        updateCellInRow(tableName, messages, 2, 3, null, 'consume', true);
+    }
+
+    function removeRowsThatNoLongerExistInData(tableName, store, data, idNode,uid){
+        let table = document.getElementById(tableName).getElementsByTagName("tbody")[0]
+        let rows = {}
+        for(let i = 1; i <= table.childNodes.length; i++){            
+            if(table.childNodes[i] && table.childNodes[i].childNodes.length >= idNode){
+                let itemNumber = table.childNodes[i].childNodes[idNode].innerHTML;
+                rows[itemNumber] = {
+                    id: itemNumber,
+                    index: (i -1),
+                    type: ''
+                }
+            }
+        }
+        for(let d in data){
+            let i = d;
+            if(uid){
+                i = data[d][uid];
+            }
+            if(rows[i]){
+                rows[i].type = 'exist'
+            } 
+        }
+        for(let r in rows){
+            if(rows[r].type != 'exist'){
+                table.deleteRow(rows[r].index);
+                delete store[r];
+            } 
+        }
+    }
+
+    function updateRowNumbers(tableName){
+        let table = document.getElementById(tableName).getElementsByTagName("tbody")[0]
+        for(let i = 1; i <= table.childNodes.length; i++){            
+            if(table.childNodes[i] && table.childNodes[i].childNodes.length > 0){
+                table.childNodes[i].childNodes[0].innerHTML = (i -1);
+            }
+        }
+    }
+
+    function updateCellInRow(tableName, data, idNode, updateNode, idProperty, property, getLength){
+        let table = document.getElementById(tableName).getElementsByTagName("tbody")[0]
+        for(let i = 1; i <= table.childNodes.length; i++){            
+            if(table.childNodes[i] && table.childNodes[i].childNodes.length >= idNode){
+                let itemNumber = table.childNodes[i].childNodes[idNode].innerHTML;
+                for(let r in data){
+                    let j = r;
+                    if(idProperty){
+                        j = data[r][idProperty];
+                    }
+                    if(itemNumber == j) {
+                        let item = data[r][property];
+                        if(getLength){
+                            item = Object.keys(item).length
+                        }
+                        table.childNodes[i].childNodes[updateNode].innerHTML = item
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    function addTd(val, align){
+        let res = "<td";
+        if(align == 0){
+            res += " align=center>"
+        } else if (align == 1){
+            res += " align=left>"
+        } else if (align == 2){
+            res +=" align=right>"
+        }
+        return res + val + "</td>";
+    }
+</script>
+
+
+  </body>
+</html>

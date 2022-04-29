@@ -1,0 +1,27 @@
+{
+  "name": "ppmq",
+  "version": "1.0.0",
+  "description": "Push Pull Message Queue",
+  "main": "ppmq.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/draxusio/ppMQ.git"
+  },
+  "keywords": [
+    "ppmq",
+    "pushpull",
+    "message",
+    "queue",
+    "mq",
+    "broker"
+  ],
+  "author": "Jonathan Cucuzza",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/draxusio/ppMQ/issues"
+  },
+  "homepage": "https://github.com/draxusio/ppMQ#readme"
+}

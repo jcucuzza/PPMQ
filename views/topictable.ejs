@@ -1,0 +1,134 @@
+<style>
+    #topic-container {
+        transition: margin-left .5s;
+        padding-left:212px;
+        padding-top:40px;
+        position:inherit;
+        width: 100%;
+        background-color:white;
+    }
+    ::-webkit-scrollbar {
+        width: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 2rem;
+    }
+
+    #topic-table {
+        position: relative;
+        border-collapse: collapse; 
+        border: 1px solid lightgrey;
+    }
+    #topic-table  th, td {
+        padding: 0.25rem;
+    }
+    #topic-table tr:hover{
+        background: lightgrey;
+        cursor:pointer;
+    }
+    #topic-table th {
+        text-align: center;
+        color: black;
+        background-color:white;
+        position: sticky;
+        top: 0; /* Don't forget this, required for the stickiness */
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+    }
+
+</style>
+
+
+<div id="topic-container">
+
+    <table id="topic-table" class="table">
+    <thead >
+        <tr>
+            <th>#</th>
+            <th>Topic </th>
+            <th>Publishers </th>
+            <th>Subscribers </th>
+            <th>Total Messages </th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    var topicStore = {};
+
+    window.onload = function(){
+        updateLiveData();
+    }
+
+    function updateLiveData(){
+        var request = new XMLHttpRequest();
+
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                //console.log(this.responseText);
+                data = JSON.parse(this.responseText);
+                //console.log(data);
+                if(!objectEmpty(data)){
+                    updateTopicTable(data);
+                }
+                setTimeout(updateLiveData(), 5000); //update every 5 second
+            }
+        };
+
+        request.open('GET', window.location.origin + '/get-topics', true);
+        request.send();
+    }
+
+    function updateTopicTable(data){
+        var table = document.getElementById("topic-table").getElementsByTagName("tbody")[0];
+        for(let topic in data.topics){
+            var msgData = data.topics[topic];
+            if(topicStore[msgData.topic] == undefined){
+                var newRow = table.insertRow(table.rows.length);
+                newRow.setAttribute('onclick', "window.location='" + window.location.origin + "/topic-summary?topic=" + msgData.topic + "';");
+                var content = addTd(table.rows.length, 0);
+                    content += addTd(msgData.topic, 0);
+                    content += addTd("", 0);
+                    content += addTd("", 0);
+                    content += addTd("", 0);
+                newRow.innerHTML = content;
+                topicStore[msgData.topic] = table.rows.length;
+            } else {
+                let i = topicStore[msgData.topic];
+                table.childNodes[i].childNodes[1].innerHTML = msgData.topic;
+                table.childNodes[i].childNodes[2].innerHTML =  Object.keys(msgData.publishers).length;
+                table.childNodes[i].childNodes[3].innerHTML =  Object.keys(msgData.subscribers).length;
+                table.childNodes[i].childNodes[4].innerHTML =  Object.keys(msgData.messages).length;
+            }
+        }
+    }
+    function getTopicTableRowByIndex(index){
+        return document.getElementById("topic-table").getElementsByTagName("tbody")[index];
+    }
+    function addTd(val, align){
+        let res = "<td";
+        if(align == 0){
+            res += " align=center>"
+        } else if (align == 1){
+            res += " align=left>"
+        } else if (align == 2){
+            res +=" align=right>"
+        }
+        return res + val + "</td>";
+    }
+    function addAnchor(topic){
+        let a = document.createElement('a');
+        let href =  '/topic-summary?topic=' + topic;
+        a.href = href;
+        a.innerHTML = href;
+        return a;
+    }
+    function objectEmpty(obj){
+        return JSON.stringify(obj) === JSON.stringify({});
+    }
+</script>
