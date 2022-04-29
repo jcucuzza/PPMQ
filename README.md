@@ -11,7 +11,7 @@ ppMQ 💬 is a lightweight **P**ush **P**ull **M**essage **Q**ueue built around 
 </p>
 
 
- > __History__ 🏺: *Why websockets? well, I am glad you asked! Our aim was to take advantage of our host server's free tier that only allowed WebSocket (others protocols were pay as you use). Rather than spending money to use their messaging queues, we built ppMQ to spend the money we saved on caffeine ☕*
+ > __History__ 🏺: *Why websockets? well, I am glad you asked! The aim was to take advantage of my host server's free tier that only allowed WebSocket (others protocols were pay as you use). Rather than spending money to use their messaging queues, I built ppMQ to spend the money I saved on caffeine ☕*
 
 ## Ease of use
 ppMQ is simple, after standing up your own ppMQ broker you can make use of the client side agent. 
