@@ -1,3 +1,5 @@
+var clientele = require('../utils/clientiele');
+
 var CLIENTS = {};
 var WS_ID_FOR_CLIENTS = {};
 
@@ -40,11 +42,13 @@ module.exports.hasClient = function (name) {
 
 module.exports.add = function (client) {
     CLIENTS[client.getName()] = client;
+    clientele.add(client);
     console.log("client %s has been added to the clients list", client.getName());
 }
 
-module.exports.removebyName = function (name) {
+module.exports.removeByName = function (name) {
     delete CLIENTS[name];
+    clientele.remove(name);
     console.log("client %s has been removed from the clients list", name);
 }
 

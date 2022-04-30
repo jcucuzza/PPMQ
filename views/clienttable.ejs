@@ -1,10 +1,5 @@
 <style>
-    #client-container{
-        padding-top:40px;
-        position:absolute;
-        width: 1254px;
-        background-color:white;
-    }
+
     #add-client{
         position:absolute;
         top: 0;
@@ -116,52 +111,81 @@
     ::-webkit-scrollbar {
         width: 0;
     }
+    #main-container {
+        transition: margin-left .5s;
+        padding-left:245px;
+        padding-right: 48px;
+        padding-top:60px;
+        position:inherit;
+        width: 100%;
+        background-color:white;
+        box-sizing: border-box;
+    }
+    #header-container {
+        text-align: center;
+        padding-bottom:20px;
+
+    }
+      .column {
+        border: 1px solid lightgrey;
+        float: left;
+        padding: 5px;
+    }
+    .row{
+        padding-left:12px;
+        padding-right:12px;
+    }
 </style>
 
-<div id='add-client-container'>
-    <div style="text-align:center;">Add Client </div>
-    <form id='client-name-form' action="/add-client" onsubmit="return validate()" method="POST"> 
-        <label for="clientName">Client Name</label>
-        <input type="text" id="clientName" name="clientName" autocomplete="off">
-        <input type="submit" id="add-button" class="add-button" value="ADD">
-    </form>
-</div>
-
-<div id='view-client-key-container'>
-    <div id='copy-client-key-clipboard' style="text-decoration:none;"><a href="javascript:copyDivToClipboard('view-client-key')"><i class="fa fa-clipboard" aria-hidden="true"></i><a></div>
-    <div id='view-client-key' style="text-align:center"></div>
-    <a href="javascript:closeKeyBox();" id='key-button' class="add-button">CLOSE</a>
-</div>
-
-
-<div id="client-container">
-    <div id="add-client">
-        <a href="javascript:addClient();" class="add-button">ADD <i class="fa fa-plus" aria-hidden="true"></i></a>
+<div id="main-container" >
+    <div id='add-client-container'>
+        <div style="text-align:center;">Add Client </div>
+        <form id='client-name-form' action="/add-client" onsubmit="return validate()" method="POST"> 
+            <label for="clientName">Client Name</label>
+            <input type="text" id="clientName" name="clientName" autocomplete="off">
+            <input type="submit" id="add-button" class="add-button" value="ADD">
+        </form>
     </div>
 
-    <table id="client-table" class="table table-hover" >
-    <thead class="thead-dark">
-        <tr>
-        <th>#</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <% let cnt = 0; %>
-        <% for(let key in results) {%>
-        <tr>
-            <td> <%= cnt += 1 %> </td> 
-            <td><%= key %></td>
-            <td></td>
-            <td><a href="javascript:viewKey('<%= results[key].getKey() %>')"><i class="fa fa-key" aria-hidden="true"></i></a></td>
-            <td><a href="/delete-client?name=<%= key %>"><i class="fa fa-times" aria-hidden="true"></i></a></td>
-        </tr>
-        <% } %>
-    </tbody>
-    </table>
+    <div id='view-client-key-container'>
+        <div id='copy-client-key-clipboard' style="text-decoration:none;"><a href="javascript:copyDivToClipboard('view-client-key')"><i class="fa fa-clipboard" aria-hidden="true"></i><a></div>
+        <div id='view-client-key' style="text-align:center"></div>
+        <a href="javascript:closeKeyBox();" id='key-button' class="add-button">CLOSE</a>
+    </div>
+
+
+    <div id="client-container">
+        <div id="add-client">
+            <a href="javascript:addClient();" class="add-button">ADD <i class="fa fa-plus" aria-hidden="true"></i></a>
+        </div>
+        <div class=row>
+            <div class=column>
+                <table id="client-table" class="table table-hover" >
+                <thead class="thead-dark">
+                    <tr>
+                        <th></th>
+                        <th>Client 📱</th>
+                        <th></th>
+                        <th>Auth 🔐</th>
+                        <th>Delete 🔥</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% let cnt = 0; %>
+                    <% for(let key in results) {%>
+                    <tr>
+                        <td> <%= cnt += 1 %> </td> 
+                        <td><%= key %></td>
+                        <td></td>
+                        <td><a href="javascript:viewKey('<%= results[key].getKey() %>')"><i class="fa fa-key" aria-hidden="true"></i></a></td>
+                        <td><a href="/delete-client?name=<%= key %>"><i class="fa fa-times" aria-hidden="true"></i></a></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -217,9 +241,5 @@
         window.getSelection().removeAllRanges();
     }
 
-    window.addEventListener("resize", function(){
-        clientContainer.style.left = (window.innerWidth / 2) - clientContainerLP + "px";
-        document.getElementById('client-table-clone').style.height = window.innerHeight - clientTableBP + "px";
-    });
 
 </script>

@@ -71,12 +71,12 @@ router.get('/client', function (req, res, next) {
 
 router.post('/add-client', function (req, res, next) {
   authApi.addClient(req, res);
-  res.render('client', { results: clientList.getClientList() });
+  res.redirect('/client');
 });
 
 router.get('/delete-client', function (req, res, next) {
   authApi.deleteClient(req, res);
-  res.render('client', { results: clientList.getClientList() });
+  res.redirect('/client');
 });
 
 router.get('/signout', function (req, res, next) {
