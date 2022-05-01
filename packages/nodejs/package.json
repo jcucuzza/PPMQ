@@ -1,6 +1,6 @@
 {
   "name": "ppmq",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Push Pull Message Queue",
   "main": "ppmq.js",
   "scripts": {
