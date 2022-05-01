@@ -2,7 +2,7 @@
  <img height="92" width="219" src="./public/images/logoppmq2.png" />
 </p>
 
-[![npm (scoped)](https://img.shields.io/badge/npm-1.0.0-blue)](https://www.npmjs.com/package/ppmq)
+[![npm](https://img.shields.io/npm/v/ppmq?style=plastic)](https://www.npmjs.com/package/ppmq)
 
 ppMQ 💬 is a lightweight **P**ush **P**ull **M**essage **Q**ueue built around websockets. In its current state, ppMQ is volatile and does not have any retention or redundency. Please take this into consideration and note that these will be improved upon in future releases. 
 
