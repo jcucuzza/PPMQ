@@ -75,4 +75,4 @@ That's all there is to it ☺️
 
 ## License
 
-MI T
+MIT
