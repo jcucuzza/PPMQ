@@ -27,7 +27,7 @@ password: admin
 There is only four methods you need in order to start pushing and pulling from your ppMQ broker!
 These are:
 
-### use
+### use.
 
 > Define your clients identity, the whereabouts of your broker, as well as the topics you wish to pull from.
 
