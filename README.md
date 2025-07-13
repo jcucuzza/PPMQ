@@ -29,6 +29,8 @@ These are:
 
 ### use.
 
+d
+
 > Define your clients identity, the whereabouts of your broker, as well as the topics you wish to pull from.
 
 ```
