@@ -19,10 +19,10 @@ ppMQ is simple, after standing up your own ppMQ broker you can make use of the c
 
 ## default creds
 
-```
+````
 user: admin
 password: admin
-```
+```adsf
 
 There is only four methods you need in order to start pushing and pulling from your ppMQ broker!
 These are:
@@ -33,17 +33,19 @@ dasdf
 
 > Define your clients identity, the whereabouts of your broker, as well as the topics you wish to pull from.
 
-```
+````
+
 ppMQ.use({
-    'url': 'ws://localhost:1337',
-    'auth': 'ffb6bdff-30fc-4249-b4ef-15413712427a',
-    'topics': [
-        'logback',
-        'purchase',
-        'customer.info',
-        'store.address'
-    ]
+'url': 'ws://localhost:1337',
+'auth': 'ffb6bdff-30fc-4249-b4ef-15413712427a',
+'topics': [
+'logback',
+'purchase',
+'customer.info',
+'store.address'
+]
 });
+
 ```
 
 ### connect
@@ -51,7 +53,9 @@ ppMQ.use({
 > After establishing your use for ppMQ we can then connect to the broker and begin using it!
 
 ```
+
 ppMQ.connect();
+
 ```
 
 ### push
@@ -59,7 +63,9 @@ ppMQ.connect();
 > Send a message to any topic, even if one does not exist, and those who are subscribed will receive it!
 
 ```
+
 ppMQ.push('baked-goods', 'Total items sold: 12');
+
 ```
 
 ### pull
@@ -67,10 +73,12 @@ ppMQ.push('baked-goods', 'Total items sold: 12');
 > Pull down a message from any topic, including topics that you did not initially subscribed to, with ease!
 
 ```
+
 var message = ppMQ.pull('baked-goods');
 if(message){
-  // do something
+// do something
 }
+
 ```
 
 That's all there is to it ☺️
@@ -78,3 +86,4 @@ That's all there is to it ☺️
 ## License
 
 MIT
+```
