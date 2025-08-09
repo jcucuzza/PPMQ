@@ -17,7 +17,7 @@ ppMQ is simple, after standing up your own ppMQ broker you can make use of the c
 - [Stand up your own ppMQ broker!](./doc/readme/ppmqBroker.md)
 - [Use a client package that suites your language](./doc/readme/ppmqClient.mq)
 
-## default creds
+## default creds.
 
 ````
 user: admin
